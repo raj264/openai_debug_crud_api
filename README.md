@@ -1,0 +1,3 @@
+# OpenAI Debug CRUD API
+
+This is a minimal Flask-based REST API for user CRUD operations, enhanced with an OpenAI-powered auto-debugging decorator...
