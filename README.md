@@ -2,8 +2,6 @@
 
 A Flask-based REST API demonstrating CRUD operations with in-memory storage, enhanced by OpenAI-powered auto-debugging via ChatGPT. This project is designed for rapid prototyping and testing, featuring reusable error-handling decorators and a developer-friendly architecture.
 
----
-
 ## ✅ Features
 
 - Simple CRUD operations for user management
@@ -11,33 +9,13 @@ A Flask-based REST API demonstrating CRUD operations with in-memory storage, enh
 - OpenAI integration for real-time error analysis and debugging suggestions
 - Reusable decorator for consistent error handling across endpoints
 - Modular codebase for easy integration into existing projects
+- JSON-formatted error responses
+- Environment variable management using `.env` files
+- Logging for monitoring application behavior
+- Interactive API documentation with Swagger UI
+- Unit tests for ensuring code reliability
 
----
-
-## 🛠️ Architecture Overview
-
-1. **Flask App**: Handles HTTP requests and routes for CRUD operations.
-2. **In-Memory Store**: Uses a Python dictionary to store user data during runtime.
-3. **OpenAI Debug Decorator**: Catches exceptions, sends tracebacks to OpenAI's API, and logs suggested fixes.
-
----
-
-## 📁 Project Structure
-
-```
-openai_debug_crud_api/
-├── app.py                  # Main Flask application with CRUD endpoints
-├── debug_decorator.py      # Decorator for OpenAI error handling
-├── main.py                 # Entry point to run the Flask app
-├── requirements.txt        # Python dependencies
-├── .env                    # Environment variables (e.g., OpenAI API key)
-├── .gitignore              # Git ignore rules
-└── README.md               # Project documentation
-```
-
----
-
-## 🚀 Getting Started
+## 🛠️ Getting Started
 
 ### Prerequisites
 
@@ -74,9 +52,7 @@ openai_debug_crud_api/
    OPENAI_API_KEY=your_openai_api_key_here
    ```
 
----
-
-## 🧪 Running the Application
+## 🚀 Running the Application
 
 Start the Flask development server:
 
@@ -86,7 +62,13 @@ python main.py
 
 The API will be accessible at `http://127.0.0.1:5000/`.
 
----
+## 🧪 Running Tests
+
+To run the unit tests:
+
+```bash
+pytest
+```
 
 ## 📬 API Endpoints
 
@@ -131,8 +113,6 @@ The API will be accessible at `http://127.0.0.1:5000/`.
 - **Endpoint**: `DELETE /users/<user_id>`
 - **Response**: Returns the deleted user object.
 
----
-
 ## 🤖 OpenAI Debug Decorator
 
 The `auto_debug_with_openai` decorator enhances error handling by:
@@ -144,27 +124,9 @@ The `auto_debug_with_openai` decorator enhances error handling by:
 
 This provides immediate, AI-driven insights into errors, streamlining the debugging process.
 
----
-
-## 🧪 Testing the API
-
-You can test the API using tools like [Postman](https://www.postman.com/) or `curl`.
-
-**Example using `curl`**:
-
-```bash
-curl -X POST http://127.0.0.1:5000/users \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Alice"}'
-```
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
 
 ## 🙌 Acknowledgments
 
