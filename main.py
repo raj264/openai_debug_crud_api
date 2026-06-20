@@ -16,7 +16,7 @@ def start_server():
     """
     host = os.getenv("FLASK_RUN_HOST", "127.0.0.1")
     port = int(os.getenv("FLASK_RUN_PORT", 5000))
-    debug = os.getenv("FLASK_DEBUG", "true").lower() == "true"
+    debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
 
     print(f"Starting server at http://{host}:{port} (debug={debug})")
     app.run(host=host, port=port, debug=debug)
