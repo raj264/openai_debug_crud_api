@@ -1,70 +1,51 @@
 # 🧠 OpenAI Debug CRUD API
 
-A Flask-based REST API demonstrating CRUD operations with in-memory storage, enhanced by OpenAI-powered auto-debugging via ChatGPT. This project is designed for rapid prototyping and testing, featuring reusable error-handling decorators and a developer-friendly architecture.
+A Flask-based REST API demonstrating CRUD operations with in-memory storage, enhanced by OpenAI-powered auto-debugging. Unexpected exceptions are sent to OpenAI for an explanation/fix suggestion; routine client errors (400/404) are not.
 
 ## ✅ Features
 
-- Simple CRUD operations for user management
-- In-memory data storage (no external database required)
-- OpenAI integration for real-time error analysis and debugging suggestions
-- Reusable decorator for consistent error handling across endpoints
-- Modular codebase for easy integration into existing projects
-- JSON-formatted error responses
-- Environment variable management using `.env` files
-- Logging for monitoring application behavior
-- Interactive API documentation with Swagger UI
-- Unit tests for ensuring code reliability
+- CRUD operations for user management, backed by an in-memory store (thread-safe via a lock)
+- OpenAI-powered error analysis on unexpected exceptions only - routine `abort()` errors (400/404) are passed through untouched, so they don't burn API calls
+- Reusable `auto_debug_with_openai` decorator for consistent error handling across endpoints
+- Structured logging via the `logging` module
+- Input validation (name must be a non-empty string)
+- Unit tests (pytest) covering CRUD routes and the decorator's error-handling paths
 
 ## 🛠️ Getting Started
 
 ### Prerequisites
 
-- Python 3.7 or higher
-- OpenAI API key
+- Python 3.9+
+- An OpenAI API key
 
 ### Installation
 
-1. **Clone the repository**:
+```bash
+git clone https://github.com/raj264/openai_debug_crud_api.git
+cd openai_debug_crud_api
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-   ```bash
-   git clone https://github.com/raj264/openai_debug_crud_api.git
-   cd openai_debug_crud_api
-   ```
+### Configure
 
-2. **Create and activate a virtual environment**:
+Create a `.env` file in the project root:
 
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up environment variables**:
-
-   Create a `.env` file in the project root with the following content:
-
-   ```env
-   OPENAI_API_KEY=your_openai_api_key_here
-   ```
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+FLASK_DEBUG=false   # defaults to false; only set true for local debugging
+```
 
 ## 🚀 Running the Application
-
-Start the Flask development server:
 
 ```bash
 python main.py
 ```
 
-The API will be accessible at `http://127.0.0.1:5000/`.
+The API is accessible at `http://127.0.0.1:5000/`.
 
 ## 🧪 Running Tests
-
-To run the unit tests:
 
 ```bash
 pytest
@@ -72,63 +53,30 @@ pytest
 
 ## 📬 API Endpoints
 
-### Create a New User
-
-- **Endpoint**: `POST /users`
-- **Request Body**:
-
-  ```json
-  {
-    "name": "Alice"
-  }
-  ```
-
-- **Response**: Returns the created user object with a unique ID.
-
-### Retrieve All Users
-
-- **Endpoint**: `GET /users`
-- **Response**: Returns a list of all user objects.
-
-### Retrieve a User by ID
-
-- **Endpoint**: `GET /users/<user_id>`
-- **Response**: Returns the user object with the specified ID.
-
-### Update a User's Name
-
-- **Endpoint**: `PUT /users/<user_id>`
-- **Request Body**:
-
-  ```json
-  {
-    "name": "Bob"
-  }
-  ```
-
-- **Response**: Returns the updated user object.
-
-### Delete a User
-
-- **Endpoint**: `DELETE /users/<user_id>`
-- **Response**: Returns the deleted user object.
+| Method | Path | Body | Description |
+|---|---|---|---|
+| POST | `/users` | `{"name": "Alice"}` | Create a user |
+| GET | `/users` | - | List all users |
+| GET | `/users/<user_id>` | - | Get a user by ID |
+| PUT | `/users/<user_id>` | `{"name": "Bob"}` | Update a user's name |
+| DELETE | `/users/<user_id>` | - | Delete a user |
 
 ## 🤖 OpenAI Debug Decorator
 
-The `auto_debug_with_openai` decorator enhances error handling by:
+`auto_debug_with_openai` wraps each route. On an **unexpected** exception, it:
 
-1. Catching exceptions in the decorated function.
-2. Capturing the full traceback.
-3. Sending the traceback to OpenAI's API with a prompt for analysis.
-4. Logging the AI's suggested fix to the console.
+1. Captures the full traceback.
+2. Sends it to OpenAI (`gpt-3.5-turbo`) for an explanation/fix suggestion.
+3. Logs the suggestion via `logging`.
+4. Re-raises the original exception.
 
-This provides immediate, AI-driven insights into errors, streamlining the debugging process.
+Flask's `HTTPException` (raised by `abort(400)`/`abort(404)`) is re-raised immediately, without involving OpenAI - those are expected client errors, not bugs.
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+MIT License.
 
 ## 🙌 Acknowledgments
 
-- [OpenAI](https://openai.com/) for providing the API used for error analysis.
+- [OpenAI](https://openai.com/) for the API used for error analysis.
 - [Flask](https://flask.palletsprojects.com/) for the web framework.
