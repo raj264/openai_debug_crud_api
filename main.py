@@ -1,13 +1,13 @@
 # main.py
 import os
 from dotenv import load_dotenv
-from flask import Flask
 
-# Load environment variables from .env file
+# Load environment variables from .env file before importing app, in case any future
+# module-level code in app.py/debug_decorator.py comes to depend on them at import time.
 load_dotenv()
 
 # Import the Flask app and decorator
-from app import app
+from app import app  # noqa: E402
 
 
 def start_server():
